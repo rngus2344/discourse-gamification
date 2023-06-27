@@ -116,6 +116,14 @@ export default Controller.extend({
   },
 
   @action
+  cancelCreateNewLeaderboard() {
+    this.setProperties({
+      creatingNew: false,
+      selectedLeaderboardId: null,
+    });
+  },
+
+  @action
   resetNewLeaderboard() {
     this.setProperties({
       creatingNew: false,
@@ -155,12 +163,13 @@ export default Controller.extend({
     this.set("loading", true);
     const data = {
       name: this.selectedLeaderboard.name,
-      to_date: this.toDate || this.selectedLeaderboard.to_date,
-      from_date: this.fromDate || this.selectedLeaderboard.from_date,
+      to_date: this.toDate,
+      from_date: this.fromDate,
       visible_to_groups_ids: this.visibleGroupIds,
       included_groups_ids: this.includedGroupIds,
       excluded_groups_ids: this.excludedGroupIds,
       default_period: this.selectedLeaderboard.default_period,
+      // default_period: this.defaultPeriod,
     };
 
     return ajax(
@@ -172,6 +181,12 @@ export default Controller.extend({
     )
       .then(() => {
         this.selectedLeaderboard.set("updated_at", new Date());
+        if (this.toDate) {
+          this.selectedLeaderboard.set("to_date", this.toDate);
+        }
+        if (this.fromDate) {
+          this.selectedLeaderboard.set("from_date", this.fromDate);
+        }
         if (this.visibleGroupIds) {
           this.selectedLeaderboard.set(
             "visible_to_groups_ids",
@@ -190,6 +205,12 @@ export default Controller.extend({
             this.excludedGroupIds
           );
         }
+        // if (this.defaultPeriod) {
+        //   this.selectedLeaderboard.set(
+        //     "default_period",
+        //     this.defaultPeriod
+        //   );
+        // }
         this.setProperties({
           loading: false,
           selectedLeaderboardId: null,
@@ -202,5 +223,18 @@ export default Controller.extend({
         });
       })
       .catch(popupAjaxError);
+  },
+
+  @action
+  cancelEditLeaderboard() {
+    this.setProperties({
+      selectedLeaderboardId: null,
+      toDate: "",
+      fromDate: "",
+      visibleGroupIds: [],
+      includedGroupIds: [],
+      excludedGroupIds: [],
+      default_period: "0",
+    });
   },
 });

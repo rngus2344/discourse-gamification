@@ -4,7 +4,8 @@
     @icon="chevron-left"
     @label="gamification.back"
     @title="gamification.back"
-    @action={{action (mut selectedLeaderboardId) null}}
+    {{!-- @action={{action (mut selectedLeaderboardId) null}} --}}
+    @action={{action "cancelEditLeaderboard"}}
   />
   <form class="form-vertical">
     <div class="control-group">
@@ -26,13 +27,13 @@
           <DatePickerPast
             @class="date-input"
             @placeholder="yyyy-mm-dd"
-            @value={{selectedLeaderboard.from_date}}
+            @value={{fromDate}}
             @onSelect={{action (mut fromDate)}}
           />
           <DatePicker
             @class="date-input"
             @placeholder="yyyy-mm-dd"
-            @value={{selectedLeaderboard.to_date}}
+            @value={{toDate}}
             @onSelect={{action (mut toDate)}}
           />
           <div>{{i18n "gamification.leaderboard.date.helper"}}</div>
@@ -78,6 +79,10 @@
         <label class="control-label">
           {{i18n "gamification.leaderboard.default_period"}}
         </label>
+        {{!-- <PeriodInput 
+          @value={{defaultPeriod}}
+          @onChange={{action (mut defaultPeriod)}}
+        /> --}}
         <PeriodInput @value={{selectedLeaderboard.default_period}} />
         <div>{{i18n "gamification.leaderboard.default_period_help"}}</div>
       </div>
@@ -91,7 +96,9 @@
     <DButton
       class="btn-secondary leaderboard-admin__btn-cancel-edit"
       @label="gamification.cancel"
-      @action={{action (mut selectedLeaderboardId) null}}
+      {{!-- @action={{action (mut selectedLeaderboardId) null}} --}}
+      @action={{action "cancelEditLeaderboard"}}
+      @disabled={{saveEditDisabled}}
     />
   </form>
 
@@ -117,7 +124,7 @@
       <DButton
         @label="gamification.cancel"
         @title="gamification.cancel"
-        @action={{action (mut selectedLeaderboardId) null}}
+        @action={{action "cancelCreateNewLeaderboard"}}
       />
     </div>
 
